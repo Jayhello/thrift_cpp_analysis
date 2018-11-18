@@ -1,0 +1,14 @@
+
+# good overview tutorial
+http://diwakergupta.github.io/thrift-missing-guide/thrift.pdf
+http://diwakergupta.github.io/thrift-missing-guide/
+
+
+https://github.com/snikulov/cmake-modules/blob/master/FindThrift.cmake
+
+
+Thrift之TProtocol类体系原理及源码详细解析之类继承架构分析
+https://www.cnblogs.com/brucewoo/archive/2012/06/05/2535473.html
+
+Thrift之TProtocol类体系原理及源码详细解析之二进制协议类TBinaryProtocolT（TBinaryProtocol）
+https://www.cnblogs.com/brucewoo/archive/2012/06/05/2537434.html
