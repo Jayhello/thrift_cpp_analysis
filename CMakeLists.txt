@@ -253,3 +253,8 @@ install(DIRECTORY "${CMAKE_BINARY_DIR}/thrift" DESTINATION "${INCLUDE_INSTALL_DI
 if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
+
+
+add_subdirectory(xy_mini/src)
+
+add_subdirectory(xy_mini/example)
