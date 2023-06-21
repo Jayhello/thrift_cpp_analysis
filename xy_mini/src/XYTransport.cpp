@@ -3,3 +3,7 @@
 //
 
 #include "XYTransport.h"
+
+namespace xy{
+
+} // xy

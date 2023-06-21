@@ -3,3 +3,7 @@
 //
 
 #include "XYProtocol.h"
+
+namespace xy{
+
+} // xy

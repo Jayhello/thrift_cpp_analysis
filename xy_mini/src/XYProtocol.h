@@ -6,6 +6,8 @@
 
 #include <cstdint>
 #include <string>
+#include <memory>
+#include "XYTransport.h"
 
 namespace xy{
 
@@ -66,8 +68,31 @@ public:
     virtual uint32_t writeI16_virt(const int16_t i16) = 0;
     virtual uint32_t writeI32_virt(const int32_t i32) = 0;
     virtual uint32_t writeI64_virt(const int64_t i64) = 0;
+
+protected:
+    IProtocol(std::shared_ptr<ITransport> pTransport):pTransport_(pTransport){}
+
+    std::shared_ptr<ITransport> pTransport_;
+
+private:
+    IProtocol(){}
 };
 
+class BinaryProtocol : public IProtocol{
+public:
+    virtual uint32_t readBool_virt(bool& value);
+    virtual uint32_t readByte_virt(int8_t& byte);
+    virtual uint32_t readI16_virt(int16_t& i16);
+    virtual uint32_t readI32_virt(int32_t& i32);
+    virtual uint32_t readI64_virt(int64_t& i64);
+    virtual uint32_t readString_virt(std::string& str);
+
+    virtual uint32_t writeBool_virt(const bool value);
+    virtual uint32_t writeByte_virt(const int8_t byte);
+    virtual uint32_t writeI16_virt(const int16_t i16);
+    virtual uint32_t writeI32_virt(const int32_t i32);
+    virtual uint32_t writeI64_virt(const int64_t i64);
+};
 
 
 } // xy

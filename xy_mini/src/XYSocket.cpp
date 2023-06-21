@@ -3,3 +3,8 @@
 //
 
 #include "XYSocket.h"
+
+namespace xy{
+
+
+} // xy
