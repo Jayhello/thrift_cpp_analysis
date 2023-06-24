@@ -39,6 +39,11 @@ class CalculatorHandler : virtual public CalculatorIf {
     printf("calculate\n");
   }
 
+  void testRsp(TestSetMap& _return, const Work& w) {
+    // Your implementation goes here
+    printf("testRsp\n");
+  }
+
   /**
    * This method has a oneway modifier. That means the client only makes
    * a request and does not listen for any response at all. Oneway methods

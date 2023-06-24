@@ -31,6 +31,7 @@ class CalculatorIf {
   virtual void ping() = 0;
   virtual int32_t add(const int32_t num1, const int32_t num2) = 0;
   virtual int32_t calculate(const int32_t logid, const Work& w) = 0;
+  virtual void testRsp(TestSetMap& _return, const Work& w) = 0;
 
   /**
    * This method has a oneway modifier. That means the client only makes
@@ -77,6 +78,9 @@ class CalculatorNull : virtual public CalculatorIf {
   int32_t calculate(const int32_t /* logid */, const Work& /* w */) {
     int32_t _return = 0;
     return _return;
+  }
+  void testRsp(TestSetMap& /* _return */, const Work& /* w */) {
+    return;
   }
   void zip() {
     return;
@@ -387,6 +391,110 @@ class Calculator_calculate_presult {
 
 };
 
+typedef struct _Calculator_testRsp_args__isset {
+  _Calculator_testRsp_args__isset() : w(false) {}
+  bool w :1;
+} _Calculator_testRsp_args__isset;
+
+class Calculator_testRsp_args {
+ public:
+
+  Calculator_testRsp_args(const Calculator_testRsp_args&);
+  Calculator_testRsp_args& operator=(const Calculator_testRsp_args&);
+  Calculator_testRsp_args() {
+  }
+
+  virtual ~Calculator_testRsp_args() throw();
+  Work w;
+
+  _Calculator_testRsp_args__isset __isset;
+
+  void __set_w(const Work& val);
+
+  bool operator == (const Calculator_testRsp_args & rhs) const
+  {
+    if (!(w == rhs.w))
+      return false;
+    return true;
+  }
+  bool operator != (const Calculator_testRsp_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const Calculator_testRsp_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class Calculator_testRsp_pargs {
+ public:
+
+
+  virtual ~Calculator_testRsp_pargs() throw();
+  const Work* w;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _Calculator_testRsp_result__isset {
+  _Calculator_testRsp_result__isset() : success(false) {}
+  bool success :1;
+} _Calculator_testRsp_result__isset;
+
+class Calculator_testRsp_result {
+ public:
+
+  Calculator_testRsp_result(const Calculator_testRsp_result&);
+  Calculator_testRsp_result& operator=(const Calculator_testRsp_result&);
+  Calculator_testRsp_result() {
+  }
+
+  virtual ~Calculator_testRsp_result() throw();
+  TestSetMap success;
+
+  _Calculator_testRsp_result__isset __isset;
+
+  void __set_success(const TestSetMap& val);
+
+  bool operator == (const Calculator_testRsp_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const Calculator_testRsp_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const Calculator_testRsp_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _Calculator_testRsp_presult__isset {
+  _Calculator_testRsp_presult__isset() : success(false) {}
+  bool success :1;
+} _Calculator_testRsp_presult__isset;
+
+class Calculator_testRsp_presult {
+ public:
+
+
+  virtual ~Calculator_testRsp_presult() throw();
+  TestSetMap* success;
+
+  _Calculator_testRsp_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 
 class Calculator_zip_args {
  public:
@@ -458,6 +566,9 @@ class CalculatorClient : virtual public CalculatorIf {
   int32_t calculate(const int32_t logid, const Work& w);
   void send_calculate(const int32_t logid, const Work& w);
   int32_t recv_calculate();
+  void testRsp(TestSetMap& _return, const Work& w);
+  void send_testRsp(const Work& w);
+  void recv_testRsp(TestSetMap& _return);
   void zip();
   void send_zip();
  protected:
@@ -478,6 +589,7 @@ class CalculatorProcessor : public ::apache::thrift::TDispatchProcessor {
   void process_ping(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_add(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_calculate(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_testRsp(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_zip(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   CalculatorProcessor(::apache::thrift::stdcxx::shared_ptr<CalculatorIf> iface) :
@@ -485,6 +597,7 @@ class CalculatorProcessor : public ::apache::thrift::TDispatchProcessor {
     processMap_["ping"] = &CalculatorProcessor::process_ping;
     processMap_["add"] = &CalculatorProcessor::process_add;
     processMap_["calculate"] = &CalculatorProcessor::process_calculate;
+    processMap_["testRsp"] = &CalculatorProcessor::process_testRsp;
     processMap_["zip"] = &CalculatorProcessor::process_zip;
   }
 
@@ -541,6 +654,16 @@ class CalculatorMultiface : virtual public CalculatorIf {
     return ifaces_[i]->calculate(logid, w);
   }
 
+  void testRsp(TestSetMap& _return, const Work& w) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->testRsp(_return, w);
+    }
+    ifaces_[i]->testRsp(_return, w);
+    return;
+  }
+
   void zip() {
     size_t sz = ifaces_.size();
     size_t i = 0;
@@ -589,6 +712,9 @@ class CalculatorConcurrentClient : virtual public CalculatorIf {
   int32_t calculate(const int32_t logid, const Work& w);
   int32_t send_calculate(const int32_t logid, const Work& w);
   int32_t recv_calculate(const int32_t seqid);
+  void testRsp(TestSetMap& _return, const Work& w);
+  int32_t send_testRsp(const Work& w);
+  void recv_testRsp(TestSetMap& _return, const int32_t seqid);
   void zip();
   void send_zip();
  protected:

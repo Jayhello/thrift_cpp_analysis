@@ -37,6 +37,8 @@ class Work;
 
 class InvalidOperation;
 
+class TestSetMap;
+
 typedef struct _Work__isset {
   _Work__isset() : num1(true), num2(false), op(false), comment(false) {}
   bool num1 :1;
@@ -148,6 +150,60 @@ class InvalidOperation : public ::apache::thrift::TException {
 void swap(InvalidOperation &a, InvalidOperation &b);
 
 std::ostream& operator<<(std::ostream& out, const InvalidOperation& obj);
+
+typedef struct _TestSetMap__isset {
+  _TestSetMap__isset() : vInt(false), setInt(false), mStrInt(false) {}
+  bool vInt :1;
+  bool setInt :1;
+  bool mStrInt :1;
+} _TestSetMap__isset;
+
+class TestSetMap : public virtual ::apache::thrift::TBase {
+ public:
+
+  TestSetMap(const TestSetMap&);
+  TestSetMap& operator=(const TestSetMap&);
+  TestSetMap() {
+  }
+
+  virtual ~TestSetMap() throw();
+  std::vector<int32_t>  vInt;
+  std::set<int32_t>  setInt;
+  std::map<std::string, int32_t>  mStrInt;
+
+  _TestSetMap__isset __isset;
+
+  void __set_vInt(const std::vector<int32_t> & val);
+
+  void __set_setInt(const std::set<int32_t> & val);
+
+  void __set_mStrInt(const std::map<std::string, int32_t> & val);
+
+  bool operator == (const TestSetMap & rhs) const
+  {
+    if (!(vInt == rhs.vInt))
+      return false;
+    if (!(setInt == rhs.setInt))
+      return false;
+    if (!(mStrInt == rhs.mStrInt))
+      return false;
+    return true;
+  }
+  bool operator != (const TestSetMap &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const TestSetMap & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(TestSetMap &a, TestSetMap &b);
+
+std::ostream& operator<<(std::ostream& out, const TestSetMap& obj);
 
 
 

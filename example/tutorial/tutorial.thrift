@@ -33,6 +33,12 @@ exception InvalidOperation {
   2: string why
 }
 
+struct TestSetMap{
+  1: vector<i32> vInt,
+  2: set<i32> setInt,
+  3: map<string, i32> mStrInt;
+}
+
 /**
  * Ahh, now onto the cool part, defining a service. Services just need a name
  * and can optionally inherit from another service using the extends keyword.
@@ -51,6 +57,8 @@ service Calculator {
    i32 add(1:i32 num1, 2:i32 num2),
 
    i32 calculate(1:i32 logid, 2:Work w) throws (1:InvalidOperation ouch),
+
+   TestSetMap testRsp(1:Work w),
 
    /**
     * This method has a oneway modifier. That means the client only makes

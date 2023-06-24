@@ -317,3 +317,200 @@ const char* InvalidOperation::what() const throw() {
 }
 
 
+TestSetMap::~TestSetMap() throw() {
+}
+
+
+void TestSetMap::__set_vInt(const std::vector<int32_t> & val) {
+  this->vInt = val;
+}
+
+void TestSetMap::__set_setInt(const std::set<int32_t> & val) {
+  this->setInt = val;
+}
+
+void TestSetMap::__set_mStrInt(const std::map<std::string, int32_t> & val) {
+  this->mStrInt = val;
+}
+std::ostream& operator<<(std::ostream& out, const TestSetMap& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t TestSetMap::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->vInt.clear();
+            uint32_t _size5;
+            ::apache::thrift::protocol::TType _etype8;
+            xfer += iprot->readListBegin(_etype8, _size5);
+            this->vInt.resize(_size5);
+            uint32_t _i9;
+            for (_i9 = 0; _i9 < _size5; ++_i9)
+            {
+              xfer += iprot->readI32(this->vInt[_i9]);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.vInt = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_SET) {
+          {
+            this->setInt.clear();
+            uint32_t _size10;
+            ::apache::thrift::protocol::TType _etype13;
+            xfer += iprot->readSetBegin(_etype13, _size10);
+            uint32_t _i14;
+            for (_i14 = 0; _i14 < _size10; ++_i14)
+            {
+              int32_t _elem15;
+              xfer += iprot->readI32(_elem15);
+              this->setInt.insert(_elem15);
+            }
+            xfer += iprot->readSetEnd();
+          }
+          this->__isset.setInt = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_MAP) {
+          {
+            this->mStrInt.clear();
+            uint32_t _size16;
+            ::apache::thrift::protocol::TType _ktype17;
+            ::apache::thrift::protocol::TType _vtype18;
+            xfer += iprot->readMapBegin(_ktype17, _vtype18, _size16);
+            uint32_t _i20;
+            for (_i20 = 0; _i20 < _size16; ++_i20)
+            {
+              std::string _key21;
+              xfer += iprot->readString(_key21);
+              int32_t& _val22 = this->mStrInt[_key21];
+              xfer += iprot->readI32(_val22);
+            }
+            xfer += iprot->readMapEnd();
+          }
+          this->__isset.mStrInt = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t TestSetMap::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("TestSetMap");
+
+  xfer += oprot->writeFieldBegin("vInt", ::apache::thrift::protocol::T_LIST, 1);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I32, static_cast<uint32_t>(this->vInt.size()));
+    std::vector<int32_t> ::const_iterator _iter23;
+    for (_iter23 = this->vInt.begin(); _iter23 != this->vInt.end(); ++_iter23)
+    {
+      xfer += oprot->writeI32((*_iter23));
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("setInt", ::apache::thrift::protocol::T_SET, 2);
+  {
+    xfer += oprot->writeSetBegin(::apache::thrift::protocol::T_I32, static_cast<uint32_t>(this->setInt.size()));
+    std::set<int32_t> ::const_iterator _iter24;
+    for (_iter24 = this->setInt.begin(); _iter24 != this->setInt.end(); ++_iter24)
+    {
+      xfer += oprot->writeI32((*_iter24));
+    }
+    xfer += oprot->writeSetEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("mStrInt", ::apache::thrift::protocol::T_MAP, 3);
+  {
+    xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_I32, static_cast<uint32_t>(this->mStrInt.size()));
+    std::map<std::string, int32_t> ::const_iterator _iter25;
+    for (_iter25 = this->mStrInt.begin(); _iter25 != this->mStrInt.end(); ++_iter25)
+    {
+      xfer += oprot->writeString(_iter25->first);
+      xfer += oprot->writeI32(_iter25->second);
+    }
+    xfer += oprot->writeMapEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(TestSetMap &a, TestSetMap &b) {
+  using ::std::swap;
+  swap(a.vInt, b.vInt);
+  swap(a.setInt, b.setInt);
+  swap(a.mStrInt, b.mStrInt);
+  swap(a.__isset, b.__isset);
+}
+
+TestSetMap::TestSetMap(const TestSetMap& other26) {
+  vInt = other26.vInt;
+  setInt = other26.setInt;
+  mStrInt = other26.mStrInt;
+  __isset = other26.__isset;
+}
+TestSetMap& TestSetMap::operator=(const TestSetMap& other27) {
+  vInt = other27.vInt;
+  setInt = other27.setInt;
+  mStrInt = other27.mStrInt;
+  __isset = other27.__isset;
+  return *this;
+}
+void TestSetMap::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "TestSetMap(";
+  out << "vInt=" << to_string(vInt);
+  out << ", " << "setInt=" << to_string(setInt);
+  out << ", " << "mStrInt=" << to_string(mStrInt);
+  out << ")";
+}
+
+

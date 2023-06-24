@@ -9,8 +9,6 @@
 
 int main(int argc, char** argv){
 
-    xy::TBufferBase it;
-
 //    test::test_template_virtual();
     test::test_template_virtual2();
 
