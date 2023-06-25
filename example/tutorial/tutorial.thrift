@@ -34,9 +34,20 @@ exception InvalidOperation {
 }
 
 struct TestSetMap{
-  1: vector<i32> vInt,
+  1: list<i32> vInt,
   2: set<i32> setInt,
   3: map<string, i32> mStrInt;
+}
+
+struct Simple{
+  1: i32    iVal,
+  2: bool   bFlag,
+  3: string str;
+}
+
+struct SimpleWrap{
+	1: Simple    tSimple,
+	2: i32		  iId; 
 }
 
 /**
@@ -58,7 +69,7 @@ service Calculator {
 
    i32 calculate(1:i32 logid, 2:Work w) throws (1:InvalidOperation ouch),
 
-   TestSetMap testRsp(1:Work w),
+	TestSetMap testRsp(1:Work w),
 
    /**
     * This method has a oneway modifier. That means the client only makes

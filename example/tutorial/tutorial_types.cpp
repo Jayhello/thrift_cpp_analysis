@@ -514,3 +514,247 @@ void TestSetMap::printTo(std::ostream& out) const {
 }
 
 
+Simple::~Simple() throw() {
+}
+
+
+void Simple::__set_iVal(const int32_t val) {
+  this->iVal = val;
+}
+
+void Simple::__set_bFlag(const bool val) {
+  this->bFlag = val;
+}
+
+void Simple::__set_str(const std::string& val) {
+  this->str = val;
+}
+std::ostream& operator<<(std::ostream& out, const Simple& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t Simple::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I32) {
+          xfer += iprot->readI32(this->iVal);
+          this->__isset.iVal = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->bFlag);
+          this->__isset.bFlag = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->str);
+          this->__isset.str = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t Simple::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("Simple");
+
+  xfer += oprot->writeFieldBegin("iVal", ::apache::thrift::protocol::T_I32, 1);
+  xfer += oprot->writeI32(this->iVal);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("bFlag", ::apache::thrift::protocol::T_BOOL, 2);
+  xfer += oprot->writeBool(this->bFlag);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("str", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->str);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(Simple &a, Simple &b) {
+  using ::std::swap;
+  swap(a.iVal, b.iVal);
+  swap(a.bFlag, b.bFlag);
+  swap(a.str, b.str);
+  swap(a.__isset, b.__isset);
+}
+
+Simple::Simple(const Simple& other28) {
+  iVal = other28.iVal;
+  bFlag = other28.bFlag;
+  str = other28.str;
+  __isset = other28.__isset;
+}
+Simple& Simple::operator=(const Simple& other29) {
+  iVal = other29.iVal;
+  bFlag = other29.bFlag;
+  str = other29.str;
+  __isset = other29.__isset;
+  return *this;
+}
+void Simple::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "Simple(";
+  out << "iVal=" << to_string(iVal);
+  out << ", " << "bFlag=" << to_string(bFlag);
+  out << ", " << "str=" << to_string(str);
+  out << ")";
+}
+
+
+SimpleWrap::~SimpleWrap() throw() {
+}
+
+
+void SimpleWrap::__set_tSimple(const Simple& val) {
+  this->tSimple = val;
+}
+
+void SimpleWrap::__set_iId(const int32_t val) {
+  this->iId = val;
+}
+std::ostream& operator<<(std::ostream& out, const SimpleWrap& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t SimpleWrap::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->tSimple.read(iprot);
+          this->__isset.tSimple = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I32) {
+          xfer += iprot->readI32(this->iId);
+          this->__isset.iId = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t SimpleWrap::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("SimpleWrap");
+
+  xfer += oprot->writeFieldBegin("tSimple", ::apache::thrift::protocol::T_STRUCT, 1);
+  xfer += this->tSimple.write(oprot);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("iId", ::apache::thrift::protocol::T_I32, 2);
+  xfer += oprot->writeI32(this->iId);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(SimpleWrap &a, SimpleWrap &b) {
+  using ::std::swap;
+  swap(a.tSimple, b.tSimple);
+  swap(a.iId, b.iId);
+  swap(a.__isset, b.__isset);
+}
+
+SimpleWrap::SimpleWrap(const SimpleWrap& other30) {
+  tSimple = other30.tSimple;
+  iId = other30.iId;
+  __isset = other30.__isset;
+}
+SimpleWrap& SimpleWrap::operator=(const SimpleWrap& other31) {
+  tSimple = other31.tSimple;
+  iId = other31.iId;
+  __isset = other31.__isset;
+  return *this;
+}
+void SimpleWrap::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "SimpleWrap(";
+  out << "tSimple=" << to_string(tSimple);
+  out << ", " << "iId=" << to_string(iId);
+  out << ")";
+}
+
+

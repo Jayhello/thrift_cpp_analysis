@@ -154,7 +154,7 @@ protected:
     uint8_t* wBound_ = nullptr;
 };
 
-class TBufferedTransport : TBufferBase{
+class TBufferedTransport : public TBufferBase{
 public:
     static const int DEFAULT_BUFFER_SIZE = 512;
 

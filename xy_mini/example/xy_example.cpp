@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <memory>
 #include "XYProtocol.h"
 #include "XYTransport.h"
 #include "xy_example.h"
@@ -31,6 +32,13 @@ void test_template_virtual2(){
     ITest* pt = new Test2();
     pt->read();
     pt->write();
+}
+
+void test_local_transport1(){
+    std::shared_ptr<xy::ITransport> local(new xy::LocalTransport());
+
+    std::shared_ptr<xy::ITransport> transport(new xy::TBufferedTransport(local));
+
 }
 
 }

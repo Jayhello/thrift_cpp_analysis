@@ -11,6 +11,27 @@
 
 namespace xy{
 
+enum TType {
+    T_STOP       = 0,
+    T_VOID       = 1,
+    T_BOOL       = 2,
+    T_BYTE       = 3,
+    T_I08        = 3,
+    T_I16        = 6,
+    T_I32        = 8,
+    T_U64        = 9,
+    T_I64        = 10,
+    T_DOUBLE     = 4,
+    T_STRING     = 11,
+    T_UTF7       = 11,
+    T_STRUCT     = 12,
+    T_MAP        = 13,
+    T_SET        = 14,
+    T_LIST       = 15,
+    T_UTF8       = 16,
+    T_UTF16      = 17
+};
+
 class IProtocol{
 public:
     uint32_t readBool(bool& value){
@@ -76,6 +97,14 @@ protected:
 
 private:
     IProtocol(){}
+};
+
+// 序列化继承的基类
+class TBase {
+public:
+    virtual ~TBase(){};
+    virtual uint32_t read(IProtocol* iprot) = 0;
+    virtual uint32_t write(IProtocol* oprot) const = 0;
 };
 
 class BinaryProtocol : public IProtocol{

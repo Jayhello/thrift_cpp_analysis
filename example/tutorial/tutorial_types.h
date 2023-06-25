@@ -39,6 +39,10 @@ class InvalidOperation;
 
 class TestSetMap;
 
+class Simple;
+
+class SimpleWrap;
+
 typedef struct _Work__isset {
   _Work__isset() : num1(true), num2(false), op(false), comment(false) {}
   bool num1 :1;
@@ -204,6 +208,108 @@ class TestSetMap : public virtual ::apache::thrift::TBase {
 void swap(TestSetMap &a, TestSetMap &b);
 
 std::ostream& operator<<(std::ostream& out, const TestSetMap& obj);
+
+typedef struct _Simple__isset {
+  _Simple__isset() : iVal(false), bFlag(false), str(false) {}
+  bool iVal :1;
+  bool bFlag :1;
+  bool str :1;
+} _Simple__isset;
+
+class Simple : public virtual ::apache::thrift::TBase {
+ public:
+
+  Simple(const Simple&);
+  Simple& operator=(const Simple&);
+  Simple() : iVal(0), bFlag(0), str() {
+  }
+
+  virtual ~Simple() throw();
+  int32_t iVal;
+  bool bFlag;
+  std::string str;
+
+  _Simple__isset __isset;
+
+  void __set_iVal(const int32_t val);
+
+  void __set_bFlag(const bool val);
+
+  void __set_str(const std::string& val);
+
+  bool operator == (const Simple & rhs) const
+  {
+    if (!(iVal == rhs.iVal))
+      return false;
+    if (!(bFlag == rhs.bFlag))
+      return false;
+    if (!(str == rhs.str))
+      return false;
+    return true;
+  }
+  bool operator != (const Simple &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const Simple & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(Simple &a, Simple &b);
+
+std::ostream& operator<<(std::ostream& out, const Simple& obj);
+
+typedef struct _SimpleWrap__isset {
+  _SimpleWrap__isset() : tSimple(false), iId(false) {}
+  bool tSimple :1;
+  bool iId :1;
+} _SimpleWrap__isset;
+
+class SimpleWrap : public virtual ::apache::thrift::TBase {
+ public:
+
+  SimpleWrap(const SimpleWrap&);
+  SimpleWrap& operator=(const SimpleWrap&);
+  SimpleWrap() : iId(0) {
+  }
+
+  virtual ~SimpleWrap() throw();
+  Simple tSimple;
+  int32_t iId;
+
+  _SimpleWrap__isset __isset;
+
+  void __set_tSimple(const Simple& val);
+
+  void __set_iId(const int32_t val);
+
+  bool operator == (const SimpleWrap & rhs) const
+  {
+    if (!(tSimple == rhs.tSimple))
+      return false;
+    if (!(iId == rhs.iId))
+      return false;
+    return true;
+  }
+  bool operator != (const SimpleWrap &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const SimpleWrap & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(SimpleWrap &a, SimpleWrap &b);
+
+std::ostream& operator<<(std::ostream& out, const SimpleWrap& obj);
 
 
 

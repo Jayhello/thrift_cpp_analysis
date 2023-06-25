@@ -56,5 +56,7 @@ void test_template_virtual();
 
 void test_template_virtual2();
 
+void test_local_transport1();
+
 } // test
 
