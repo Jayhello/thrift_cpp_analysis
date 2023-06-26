@@ -34,6 +34,10 @@ enum TType {
 
 class IProtocol{
 public:
+    virtual uint32_t readFieldBegin(std::string& name, TType& fieldType, int16_t& fieldId) = 0;
+
+    virtual uint32_t readFieldEnd() = 0;
+
     uint32_t readBool(bool& value){
         return readBool_virt(value);
     }
@@ -56,6 +60,10 @@ public:
     uint32_t readString(std::string& str) {
         return readString_virt(str);
     }
+
+    virtual uint32_t writeFieldBegin(const std::string& name, const TType fieldType, const int16_t fieldId) = 0;
+
+    virtual uint32_t writeFieldEnd() = 0;
 
     uint32_t writeBool(const bool value) {
         return writeBool_virt(value);
@@ -109,6 +117,13 @@ public:
 
 class BinaryProtocol : public IProtocol{
 public:
+    BinaryProtocol(std::shared_ptr<ITransport> pTransport):IProtocol(pTransport){}
+
+    virtual uint32_t readFieldBegin(std::string& name, TType& fieldType, int16_t& fieldId);
+    virtual uint32_t readFieldEnd();
+    virtual uint32_t writeFieldBegin(const std::string& name, const TType fieldType, const int16_t fieldId);
+    virtual uint32_t writeFieldEnd();
+
     virtual uint32_t readBool_virt(bool& value);
     virtual uint32_t readByte_virt(int8_t& byte);
     virtual uint32_t readI16_virt(int16_t& i16);
