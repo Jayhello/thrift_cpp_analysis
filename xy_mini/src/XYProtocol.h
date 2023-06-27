@@ -97,6 +97,7 @@ public:
     virtual uint32_t writeI16_virt(const int16_t i16) = 0;
     virtual uint32_t writeI32_virt(const int32_t i32) = 0;
     virtual uint32_t writeI64_virt(const int64_t i64) = 0;
+    virtual uint32_t writeString_virt(const std::string& str) = 0;
 
 protected:
     IProtocol(std::shared_ptr<ITransport> pTransport):pTransport_(pTransport){}
@@ -136,6 +137,7 @@ public:
     virtual uint32_t writeI16_virt(const int16_t i16);
     virtual uint32_t writeI32_virt(const int32_t i32);
     virtual uint32_t writeI64_virt(const int64_t i64);
+    virtual uint32_t writeString_virt(const std::string& str) = 0;
 };
 
 
