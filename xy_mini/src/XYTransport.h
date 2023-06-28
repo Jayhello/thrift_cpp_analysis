@@ -19,6 +19,7 @@ uint32_t readAll(Transport_& trans, uint8_t* buf, uint32_t len) {
     while (have < len) {
         get = trans.read(buf + have, len - have);
         if (get <= 0) {
+            break;
 //            throw TTransportException(TTransportException::END_OF_FILE, "No more data to read.");
         }
         have += get;

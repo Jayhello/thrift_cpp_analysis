@@ -23,15 +23,28 @@ uint32_t BinaryProtocol::writeFieldEnd(){
 }
 
 uint32_t BinaryProtocol::readBool_virt(bool& value){
-
+    uint8_t v = 1;
+    pTransport_->read(&v, 1);
+    value = v;
+    return 1;
 }
 
 uint32_t BinaryProtocol::readByte_virt(int8_t& byte){
-
+    uint8_t b[1];
+    pTransport_->readAll(b, 1);
+    byte = *(int8_t*)b;
+    return 1;
 }
 
 uint32_t BinaryProtocol::readI16_virt(int16_t& i16){
-
+    union bytes {
+        uint8_t b[2];
+        int16_t all;
+    } theBytes;
+    pTransport_->readAll(theBytes.b, 2);
+//    i16 = (int16_t)ByteOrder_::fromWire16(theBytes.all);
+    i16 = theBytes.all;
+    return 2;
 }
 
 uint32_t BinaryProtocol::readI32_virt(int32_t& i32){
