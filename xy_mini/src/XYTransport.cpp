@@ -23,7 +23,11 @@ void TBufferedTransport::writeSlow(const uint8_t* buf, uint32_t len){
 }
 
 void TBufferedTransport::flush(){
-
+    uint32_t have_bytes = static_cast<uint32_t>(wBase_ - wBuf_);
+    if (have_bytes > 0) {
+        wBase_ = wBuf_;
+        transport_->write(wBuf_, have_bytes);
+    }
 }
 
 TBufferedTransport::~TBufferedTransport(){

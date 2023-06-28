@@ -19,8 +19,9 @@ uint32_t readAll(Transport_& trans, uint8_t* buf, uint32_t len) {
     while (have < len) {
         get = trans.read(buf + have, len - have);
         if (get <= 0) {
-            break;
+//            break;
 //            throw TTransportException(TTransportException::END_OF_FILE, "No more data to read.");
+            throw std::runtime_error("No more data to read.");
         }
         have += get;
     }
@@ -112,8 +113,8 @@ public:
     virtual uint32_t read(uint8_t* buf, uint32_t len){
         uint8_t* newBase = rBase_ + len;
         if(newBase <= rBound_){
-            std::memcpy(buf, rBound_, len);
-            rBound_ = newBase;
+            std::memcpy(buf, rBase_, len);
+            rBase_ = newBase;
             return len;
         }
         return readSlow(buf, len);

@@ -44,9 +44,11 @@ void test_local_transport1(){
     uint32_t size = tp1.write(protocol.get());
     std::cout << "write_size: " << size << ", tp1: " << tp1 << std::endl;
 
+    transport->flush();
+
     TestProto tp2;
     size = tp2.read(protocol.get());
-    std::cout << "read_size: " << size << ", tp1: " << tp2 << std::endl;
+    std::cout << "read_size: " << size << ", tp2: " << tp2 << std::endl;
 }
 
 uint32_t TestProto::read(xy::IProtocol* iprot){
@@ -56,15 +58,15 @@ uint32_t TestProto::read(xy::IProtocol* iprot){
     int16_t fid;
 
     xfer += iprot->readFieldBegin(fname, ftype, fid);
-    iprot->readI32(iVal);
+    xfer += iprot->readI32(iVal);
     xfer += iprot->readFieldEnd();
 
     xfer += iprot->readFieldBegin(fname, ftype, fid);
-    iprot->readBool(bFlag);
+    xfer += iprot->readBool(bFlag);
     xfer += iprot->readFieldEnd();
 
     xfer += iprot->readFieldBegin(fname, ftype, fid);
-    iprot->readString(str);
+    xfer += iprot->readString(str);
     xfer += iprot->readFieldEnd();
 
     return xfer;
