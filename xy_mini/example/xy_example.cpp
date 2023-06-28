@@ -4,16 +4,16 @@
 
 #include <iostream>
 #include <memory>
-#include "XYProtocol.h"
 #include "XYTransport.h"
 #include "xy_example.h"
 
 int main(int argc, char** argv){
 
 //    test::test_template_virtual();
-    test::test_template_virtual2();
+//    test::test_template_virtual2();
+    test::test_local_transport1();
 
-    std::cout << "123" << std::endl;
+    std::cout << "example end" << std::endl;
     return 0;
 }
 
@@ -36,9 +36,69 @@ void test_template_virtual2(){
 
 void test_local_transport1(){
     std::shared_ptr<xy::ITransport> local(new xy::LocalTransport());
-
     std::shared_ptr<xy::ITransport> transport(new xy::TBufferedTransport(local));
 
+    std::shared_ptr<xy::IProtocol> protocol(new xy::BinaryProtocol(transport));
+
+    TestProto tp1(123, true, "abc");
+    uint32_t size = tp1.write(protocol.get());
+    std::cout << "write_size: " << size << ", tp1: " << tp1 << std::endl;
+
+    TestProto tp2;
+    size = tp2.read(protocol.get());
+    std::cout << "read_size: " << size << ", tp1: " << tp2 << std::endl;
 }
 
+uint32_t TestProto::read(xy::IProtocol* iprot){
+    uint32_t xfer = 0;
+    std::string fname;
+    xy::TType ftype;
+    int16_t fid;
+
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    iprot->readI32(iVal);
+    xfer += iprot->readFieldEnd();
+
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    iprot->readBool(bFlag);
+    xfer += iprot->readFieldEnd();
+
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    iprot->readString(str);
+    xfer += iprot->readFieldEnd();
+
+    return xfer;
 }
+
+uint32_t TestProto::write(xy::IProtocol* oprot)const{
+    uint32_t xfer = 0;
+
+    xfer += oprot->writeFieldBegin("val", xy::T_I32, 1);
+    xfer += oprot->writeI32(iVal);
+    xfer += oprot->writeFieldEnd();
+
+    xfer += oprot->writeFieldBegin("flag", xy::T_BOOL, 2);
+    xfer += oprot->writeBool(bFlag);
+    xfer += oprot->writeFieldEnd();
+
+    xfer += oprot->writeFieldBegin("str", xy::T_STRING, 3);
+    xfer += oprot->writeString(str);
+    xfer += oprot->writeFieldEnd();
+
+    return xfer;
+}
+
+void TestProto::printTo(std::ostream& out) const{
+    out << "TestProto(";
+    out << "iVal=" << std::to_string(iVal);
+    out << ", " << "bFlag=" << std::to_string(bFlag);
+    out << ", " << "str=" << str;
+    out << ")";
+}
+
+std::ostream& operator<<(std::ostream& out, const TestProto& obj){
+    obj.printTo(out);
+    return out;
+}
+
+} // test

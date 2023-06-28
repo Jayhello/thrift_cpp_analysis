@@ -4,6 +4,7 @@
 
 #pragma once
 #include <iostream>
+#include "XYProtocol.h"
 
 namespace test{
 
@@ -57,6 +58,22 @@ void test_template_virtual();
 void test_template_virtual2();
 
 void test_local_transport1();
+
+class TestProto : public xy::TBase{
+public:
+    TestProto(int v=0, bool b=false, const std::string& s = ""):iVal(v), bFlag(b), str(s){}
+
+    virtual uint32_t read(xy::IProtocol* iprot);
+    virtual uint32_t write(xy::IProtocol* oprot)const;
+
+    virtual void printTo(std::ostream& out) const;
+
+    int32_t iVal;
+    bool bFlag;
+    std::string str;
+};
+
+std::ostream& operator<<(std::ostream& out, const TestProto& obj);
 
 } // test
 

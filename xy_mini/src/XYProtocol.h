@@ -85,6 +85,10 @@ public:
         return writeI64_virt(i64);
     }
 
+    uint32_t writeString(const std::string& str) {
+        return writeString_virt(str);
+    }
+
     virtual uint32_t readBool_virt(bool& value) = 0;
     virtual uint32_t readByte_virt(int8_t& byte) = 0;
     virtual uint32_t readI16_virt(int16_t& i16) = 0;
@@ -137,7 +141,7 @@ public:
     virtual uint32_t writeI16_virt(const int16_t i16);
     virtual uint32_t writeI32_virt(const int32_t i32);
     virtual uint32_t writeI64_virt(const int64_t i64);
-    virtual uint32_t writeString_virt(const std::string& str) = 0;
+    virtual uint32_t writeString_virt(const std::string& str);
 };
 
 
