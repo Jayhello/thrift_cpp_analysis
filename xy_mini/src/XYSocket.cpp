@@ -40,12 +40,41 @@ void TSocket::close(){
 }
 
 uint32_t TSocket::read(uint8_t* buf, uint32_t len){
-    ssize_t read_bytes = ::read(fd_, buf, len);
-    return read_bytes;
+    uint32_t ret = 0;
+
+    while(ret < len){
+        ssize_t read_bytes = ::read(fd_, buf, len);
+        if(read_bytes > len){
+            ret += read_bytes;
+        }else if(0 == read_bytes){
+            close();
+        }else{
+            return -1;
+        }
+    }
+
+    return ret;
 }
 
 void TSocket::write(const uint8_t* buf, uint32_t len){
     ::write(fd_, buf, len);
+}
+
+
+void TSocket::setConnTimeout(int ms){
+}
+
+void TSocket::setRecvTimeout(int timeout_ms){
+    struct timeval platform_time = {(int)(timeout_ms / 1000), (int)((timeout_ms % 1000) * 1000)};
+    setsockopt(fd_, SOL_SOCKET,SO_RCVTIMEO, (char *)&platform_time, sizeof(struct timeval));
+}
+
+void TSocket::setSendTimeout(int timeout_ms){
+    struct timeval platform_time = {(int)(timeout_ms / 1000), (int)((timeout_ms % 1000) * 1000)};
+    setsockopt(fd_, SOL_SOCKET,SO_SNDTIMEO, (char *)&platform_time, sizeof(struct timeval));
+}
+
+void TSocket::setKeepAlive(bool keepAlive){
 }
 
 uint32_t TSocket::readEnd(){
@@ -57,7 +86,6 @@ uint32_t TSocket::writeEnd(){
 }
 
 void TSocket::flush(){
-
 }
 
 int TSocket::connect(){

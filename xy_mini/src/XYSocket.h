@@ -32,6 +32,14 @@ public:
 
     int connect();
 
+    void setConnTimeout(int ms);
+
+    void setRecvTimeout(int ms);
+
+    void setSendTimeout(int ms);
+
+    void setKeepAlive(bool keepAlive);
+
 private:
     std::string  sIp_;
     int          iPort_;
