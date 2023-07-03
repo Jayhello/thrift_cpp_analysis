@@ -43,8 +43,6 @@ public:
 
     TServerSocket(int port);
 
-    TServerSocket(const std::string& address, int port);
-
     virtual ~TServerSocket();
 
     void setSendTimeout(int sendTimeout);
@@ -52,9 +50,9 @@ public:
 
     int getSocketFD() { return serverSocket_; }
 
-    int getPort();
+    int getPort(){return port_;}
 
-    void listen();
+    virtual void listen();
 //    void interrupt();
 //    void interruptChildren();
     void close();
@@ -64,7 +62,7 @@ protected:
 //    virtual std::shared_ptr<TSocket> createSocket(int client);
 
 private:
-    void notify(int notifySock);
+//    void notify(int notifySock);
 
     int port_;
     std::string address_;

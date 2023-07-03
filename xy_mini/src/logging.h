@@ -7,6 +7,7 @@
 #include <sstream>
 #include <atomic>
 #include <string>
+#include <string.h>
 #include "xy_comm.h"
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)

@@ -77,3 +77,10 @@ std::ostream& operator<<(std::ostream& out, const TestProto& obj);
 
 } // test
 
+//
+namespace test_svr{
+
+void test_server_transport();
+
+} // test_svr
+

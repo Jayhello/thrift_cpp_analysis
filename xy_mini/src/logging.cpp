@@ -102,7 +102,7 @@ void Logger::maybeRotate() {
 static thread_local uint64_t tid;
 void Logger::logv(int level, const char *file, int line, const char *func, const char *fmt...) {
     if (tid == 0) {
-        tid = comm::util::util::gettid();
+        tid = gettid();
     }
     if (level > level_) {
         return;

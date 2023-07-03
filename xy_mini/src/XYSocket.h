@@ -12,6 +12,9 @@ class TSocket : public ITransport{
 public:
     TSocket(const std::string& ip, int port):sIp_(ip), iPort_(port){}
 
+    // 被动的创建(例如服务端 accept返回的)
+    TSocket(int fd, const std::string& ip, int port):sIp_(ip), iPort_(port), fd_(fd){}
+
     virtual bool isOpen() { return bConnected_; }
 
     virtual bool peek() { return isOpen(); }
@@ -43,7 +46,6 @@ public:
 private:
     std::string  sIp_;
     int          iPort_;
-
     int          fd_         = -1;
     bool         bConnected_ = false;
 };  // TSocket

@@ -6,12 +6,15 @@
 #include <memory>
 #include "XYTransport.h"
 #include "xy_example.h"
+#include "xy_servertransport.h"
 
 int main(int argc, char** argv){
 
 //    test::test_template_virtual();
 //    test::test_template_virtual2();
-    test::test_local_transport1();
+//    test::test_local_transport1();
+
+    test_svr::test_server_transport();
 
     std::cout << "example end" << std::endl;
     return 0;
@@ -104,3 +107,12 @@ std::ostream& operator<<(std::ostream& out, const TestProto& obj){
 }
 
 } // test
+
+namespace test_svr{
+
+void test_server_transport(){
+    xy::TServerSocket ts(8889);
+    ts.listen();
+}
+
+} // test_svr

@@ -3,6 +3,7 @@
 //
 #pragma once
 #include "xy_concurrency.h"
+#include "xy_servertransport.h"
 
 namespace xy{
 
@@ -17,11 +18,12 @@ public:
     // Allows running the server as a Runnable thread
     virtual void run() { serve(); }
 
+
+
 protected:
     TServer();
 
-
-
+    std::shared_ptr<TServerTransport> serverTransport_;
 };
 
 } // xy

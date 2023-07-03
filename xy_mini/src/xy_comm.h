@@ -7,6 +7,9 @@
 #include <string>
 #include <sys/socket.h>
 
+#define LOCAL_IP    "127.0.0.1"
+#define PORT        8880
+
 namespace xy{
 
 class TException : public std::exception {
@@ -79,5 +82,7 @@ int setReuseAddr(int fd);
 int setReusePort(int fd);
 
 int setSocketOpt(int fd, int opt, const void* val, socklen_t opt_len, int level);
+
+uint64_t gettid();
 
 } // xy
