@@ -228,5 +228,24 @@ private:
     std::vector<uint8_t> buf_;
 };
 
+class TTransportFactory {
+public:
+    TTransportFactory() {}
+    virtual ~TTransportFactory() {}
+    virtual std::shared_ptr<ITransport> getTransport(std::shared_ptr<ITransport> trans) {
+        return trans;
+    }
+};
+
+class TBufferedTransportFactory : public TTransportFactory {
+public:
+    TBufferedTransportFactory() {}
+
+    virtual ~TBufferedTransportFactory() {}
+
+    virtual std::shared_ptr<ITransport> getTransport(std::shared_ptr<ITransport> trans) {
+        return std::shared_ptr<ITransport>(new TBufferedTransport(trans));
+    }
+};
 
 } // xy

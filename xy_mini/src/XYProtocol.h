@@ -144,5 +144,28 @@ public:
     virtual uint32_t writeString_virt(const std::string& str);
 };
 
+class TProtocolFactory {
+public:
+    TProtocolFactory() {}
+
+    virtual ~TProtocolFactory();
+
+    virtual std::shared_ptr<IProtocol> getProtocol(std::shared_ptr<ITransport> trans) = 0;
+    virtual std::shared_ptr<IProtocol> getProtocol(std::shared_ptr<ITransport> inTrans,
+                                                   std::shared_ptr<ITransport> outTrans) {
+        (void)outTrans;
+        return getProtocol(inTrans);
+    }
+};
+
+class TBinaryProtocolFactory : public TProtocolFactory{
+    TBinaryProtocolFactory() {}
+
+    virtual ~TBinaryProtocolFactory() {}
+
+    virtual std::shared_ptr<IProtocol> getProtocol(std::shared_ptr<ITransport> trans){
+        return std::shared_ptr<IProtocol>(new BinaryProtocol(trans));
+    }
+};
 
 } // xy
