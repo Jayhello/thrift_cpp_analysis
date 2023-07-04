@@ -30,6 +30,54 @@ uint32_t BinaryProtocol::writeFieldEnd(){
     return 0;
 }
 
+
+uint32_t BinaryProtocol::readStructBegin(std::string& name){
+    return 0;
+}
+
+
+uint32_t BinaryProtocol::readStructEnd(){
+    return 0;
+}
+
+uint32_t BinaryProtocol::readMessageBegin(std::string& name, TMessageType& messageType, int32_t& seqid){
+    uint32_t result = 0;
+
+    int8_t type;
+    result += readString(name);
+    result += readByte(type);
+    messageType = (TMessageType)type;
+    result += readI32(seqid);
+    return result;
+}
+
+uint32_t BinaryProtocol::readMessageEnd(){
+    return 0;
+}
+
+
+uint32_t BinaryProtocol::writeMessageBegin(const std::string& name,
+                                   const TMessageType messageType,
+                                   const int32_t seqid){
+    uint32_t wsize = 0;
+    wsize += writeString(name);
+    wsize += writeByte((int8_t)messageType);
+    wsize += writeI32(seqid);
+    return wsize;
+}
+
+uint32_t BinaryProtocol::writeMessageEnd(){
+    return 0;
+}
+
+uint32_t BinaryProtocol::writeStructBegin(const char* name){
+    return 0;
+}
+
+uint32_t BinaryProtocol::writeStructEnd(){
+    return 0;
+}
+
 uint32_t BinaryProtocol::readBool_virt(bool& value){
     uint8_t v = 1;
     pTransport_->read(&v, 1);

@@ -32,6 +32,45 @@ protected:
     std::string message_;
 };
 
+class TTransportException : public TException {
+public:
+    enum TTransportExceptionType {
+        UNKNOWN = 0,
+        NOT_OPEN = 1,
+        TIMED_OUT = 2,
+        END_OF_FILE = 3,
+        INTERRUPTED = 4,
+        BAD_ARGS = 5,
+        CORRUPTED_DATA = 6,
+        INTERNAL_ERROR = 7
+    };
+
+    TTransportException() : TException(), type_(UNKNOWN) {}
+
+    TTransportException(TTransportExceptionType type) : TException(), type_(type) {}
+
+    TTransportException(const std::string& message)
+    :TException(message), type_(UNKNOWN) {}
+
+    TTransportException(TTransportExceptionType type, const std::string& message)
+    :TException(message), type_(type) {}
+
+    TTransportException(TTransportExceptionType type, const std::string& message, int errno_copy)
+//    :TException(message + ": " + TOutput::strerror_s(errno_copy)), type_(type) {}
+    :TException(message), type_(type) {}
+
+    virtual ~TTransportException() throw() {}
+
+    TTransportExceptionType getType() const throw() { return type_; }
+
+    virtual const char* what() const throw();
+
+protected:
+    /** Just like strerror_r but returns a C++ string object. */
+    std::string strerror_s(int errno_copy);
+    TTransportExceptionType type_;
+};
+
 class noncopyable {
 protected:
     // 子类可以构造和析构

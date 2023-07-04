@@ -5,6 +5,7 @@
 #pragma once
 #include <iostream>
 #include "XYProtocol.h"
+#include "xy_processor.h"
 
 namespace test{
 
@@ -81,6 +82,9 @@ std::ostream& operator<<(std::ostream& out, const TestProto& obj);
 namespace test_svr{
 
 void test_server_transport();
+
+
+
 
 } // test_svr
 

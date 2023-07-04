@@ -32,8 +32,23 @@ enum TType {
     T_UTF16      = 17
 };
 
+enum TMessageType {
+    T_CALL       = 1,
+    T_REPLY      = 2,
+    T_EXCEPTION  = 3,
+    T_ONEWAY     = 4
+};
+
 class IProtocol{
 public:
+    // 例如一个rpc的消息
+    virtual uint32_t readMessageBegin(std::string& name, TMessageType& messageType, int32_t& seqid) = 0;
+    virtual uint32_t readMessageEnd() = 0;
+
+    // 例如一个thrift struct
+    virtual uint32_t readStructBegin(std::string& name) = 0;
+    virtual uint32_t readStructEnd() = 0;
+
     virtual uint32_t readFieldBegin(std::string& name, TType& fieldType, int16_t& fieldId) = 0;
 
     virtual uint32_t readFieldEnd() = 0;
@@ -60,6 +75,16 @@ public:
     uint32_t readString(std::string& str) {
         return readString_virt(str);
     }
+
+    virtual uint32_t writeMessageBegin(const std::string& name,
+                               const TMessageType messageType,
+                               const int32_t seqid) = 0;
+
+    virtual uint32_t writeMessageEnd() = 0;
+
+    virtual uint32_t writeStructBegin(const char* name) = 0;
+
+    virtual uint32_t writeStructEnd() = 0;
 
     virtual uint32_t writeFieldBegin(const std::string& name, const TType fieldType, const int16_t fieldId) = 0;
 
@@ -103,6 +128,8 @@ public:
     virtual uint32_t writeI64_virt(const int64_t i64) = 0;
     virtual uint32_t writeString_virt(const std::string& str) = 0;
 
+    inline std::shared_ptr<ITransport> getTransport() { return pTransport_; }
+
 protected:
     IProtocol(std::shared_ptr<ITransport> pTransport):pTransport_(pTransport){}
 
@@ -128,6 +155,22 @@ public:
     virtual uint32_t readFieldEnd();
     virtual uint32_t writeFieldBegin(const std::string& name, const TType fieldType, const int16_t fieldId);
     virtual uint32_t writeFieldEnd();
+
+    virtual uint32_t readStructBegin(std::string& name);
+    virtual uint32_t readStructEnd();
+
+    virtual uint32_t readMessageBegin(std::string& name, TMessageType& messageType, int32_t& seqid);
+    virtual uint32_t readMessageEnd();
+
+    virtual uint32_t writeMessageBegin(const std::string& name,
+                                       const TMessageType messageType,
+                                       const int32_t seqid);
+
+    virtual uint32_t writeMessageEnd();
+
+    virtual uint32_t writeStructBegin(const char* name);
+
+    virtual uint32_t writeStructEnd();
 
     virtual uint32_t readBool_virt(bool& value);
     virtual uint32_t readByte_virt(int8_t& byte);

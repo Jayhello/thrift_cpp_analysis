@@ -47,9 +47,12 @@ uint32_t TSocket::read(uint8_t* buf, uint32_t len){
         if(read_bytes > len){
             ret += read_bytes;
         }else if(0 == read_bytes){
-            close();
+//            close();
+            throw TTransportException(TTransportException::TIMED_OUT,
+                                      "THRIFT_EAGAIN (unavailable resources)");
         }else{
-            return -1;
+            int errno_copy = errno;
+            throw TTransportException(TTransportException::UNKNOWN, "Unknown", errno_copy);
         }
     }
 
