@@ -4,6 +4,8 @@
 
 #pragma once
 #include <iostream>
+#include <functional>
+#include <map>
 #include "XYProtocol.h"
 #include "xy_processor.h"
 
@@ -83,7 +85,50 @@ namespace test_svr{
 
 void test_server_transport();
 
+class TestReq : public xy::TBase{
+public:
+    TestReq(int v=0, bool b=false, const std::string& s = ""):iVal(v), bFlag(b), str(s){}
 
+    virtual uint32_t read(xy::IProtocol* iprot);
+    virtual uint32_t write(xy::IProtocol* oprot)const;
+
+    virtual void printTo(std::ostream& out) const;
+
+    int32_t iVal;
+    bool bFlag;
+    std::string str;
+};
+
+class TestIf{
+public:
+    virtual int testInt(int) = 0;
+
+    virtual int testStr(const std::string& ) = 0;
+};
+
+class TestProcessor : public xy::TDispatchProcessor{
+public:
+    using ProcessFunction = std::function<bool(int32_t, xy::IProtocol*, xy::IProtocol*, void*)>;
+    using ProcessMap = std::map<std::string, ProcessFunction>;
+
+    TestProcessor(const std::shared_ptr<TestIf>& iface):iface_(iface){
+        processMap_["testInt"] = &TestProcessor::process_testInt;
+        processMap_["testStr"] = &TestProcessor::process_testStr;
+    }
+private:
+    bool process_testInt(int32_t seqid, xy::IProtocol* in, xy::IProtocol* out, void* callContext);
+
+    bool process_testStr(int32_t seqid, xy::IProtocol* in, xy::IProtocol* out, void* callContext);
+
+protected:
+    virtual bool dispatchCall(xy::IProtocol* in,
+                              xy::IProtocol* out,
+                              const std::string& fname,
+                              int32_t seqid,
+                              void* callContext);
+    std::shared_ptr<TestIf> iface_;
+    ProcessMap              processMap_;
+};
 
 
 } // test_svr
