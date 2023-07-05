@@ -17,7 +17,7 @@
 # under the License.
 #
 cmake_minimum_required(VERSION 3.5)
-project("Apache Thrift")
+project("src_thrift")
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 

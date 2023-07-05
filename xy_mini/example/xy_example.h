@@ -62,6 +62,8 @@ void test_template_virtual2();
 
 void test_local_transport1();
 
+void test_exception_proto();
+
 class TestProto : public xy::TBase{
 public:
     TestProto(int v=0, bool b=false, const std::string& s = ""):iVal(v), bFlag(b), str(s){}
@@ -108,7 +110,9 @@ public:
 
 class TestProcessor : public xy::TDispatchProcessor{
 public:
-    using ProcessFunction = std::function<bool(int32_t, xy::IProtocol*, xy::IProtocol*, void*)>;
+//    using ProcessFunction = std::function<bool(int32_t, xy::IProtocol*, xy::IProtocol*, void*)>;  // 这种定义方式不行
+    typedef bool(TestProcessor::*ProcessFunction)(int32_t, xy::IProtocol*, xy::IProtocol*, void*);
+
     using ProcessMap = std::map<std::string, ProcessFunction>;
 
     TestProcessor(const std::shared_ptr<TestIf>& iface):iface_(iface){

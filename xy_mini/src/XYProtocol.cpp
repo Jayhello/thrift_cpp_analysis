@@ -11,8 +11,16 @@ uint32_t BinaryProtocol::readFieldBegin(std::string& name, TType& fieldType, int
     int8_t type;
     result += readByte(type);
     fieldType = (TType)type;
+    if(T_STOP == fieldType){   // stop的就没有 id 了
+        fieldId = 0;
+        return result;
+    }
     result += readI16(fieldId);
     return result;
+}
+
+uint32_t BinaryProtocol::writeFieldStop(){
+    return writeByte((int8_t)T_STOP);
 }
 
 uint32_t BinaryProtocol::readFieldEnd(){

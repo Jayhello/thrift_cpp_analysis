@@ -90,6 +90,8 @@ public:
 
     virtual uint32_t writeFieldEnd() = 0;
 
+    virtual uint32_t writeFieldStop() = 0;
+
     uint32_t writeBool(const bool value) {
         return writeBool_virt(value);
     }
@@ -114,6 +116,9 @@ public:
         return writeString_virt(str);
     }
 
+    inline std::shared_ptr<ITransport> getTransport() { return pTransport_; }
+
+protected:
     virtual uint32_t readBool_virt(bool& value) = 0;
     virtual uint32_t readByte_virt(int8_t& byte) = 0;
     virtual uint32_t readI16_virt(int16_t& i16) = 0;
@@ -127,8 +132,6 @@ public:
     virtual uint32_t writeI32_virt(const int32_t i32) = 0;
     virtual uint32_t writeI64_virt(const int64_t i64) = 0;
     virtual uint32_t writeString_virt(const std::string& str) = 0;
-
-    inline std::shared_ptr<ITransport> getTransport() { return pTransport_; }
 
 protected:
     IProtocol(std::shared_ptr<ITransport> pTransport):pTransport_(pTransport){}
@@ -172,6 +175,9 @@ public:
 
     virtual uint32_t writeStructEnd();
 
+    virtual uint32_t writeFieldStop();
+
+protected:
     virtual uint32_t readBool_virt(bool& value);
     virtual uint32_t readByte_virt(int8_t& byte);
     virtual uint32_t readI16_virt(int16_t& i16);

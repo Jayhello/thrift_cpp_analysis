@@ -13,8 +13,9 @@ int main(int argc, char** argv){
 //    test::test_template_virtual();
 //    test::test_template_virtual2();
 //    test::test_local_transport1();
+    test::test_exception_proto();
 
-    test_svr::test_server_transport();
+//    test_svr::test_server_transport();
 
     std::cout << "example end" << std::endl;
     return 0;
@@ -52,6 +53,22 @@ void test_local_transport1(){
     TestProto tp2;
     size = tp2.read(protocol.get());
     std::cout << "read_size: " << size << ", tp2: " << tp2 << std::endl;
+}
+
+void test_exception_proto(){
+    std::shared_ptr<xy::ITransport> local(new xy::LocalTransport());
+    std::shared_ptr<xy::ITransport> transport(new xy::TBufferedTransport(local));
+    std::shared_ptr<xy::IProtocol> protocol(new xy::BinaryProtocol(transport));
+
+    xy::TApplicationException ex1(xy::TApplicationException::PROTOCOL_ERROR, "test_1234");
+    uint32_t size = ex1.write(protocol.get());
+    std::cout << "write_size: " << size << ", ex1: " << ex1 << std::endl;
+
+    transport->flush();
+
+    xy::TApplicationException ex2;
+    size = ex2.read(protocol.get());
+    std::cout << "read_size: " << size << ", ex2: " << ex2 << std::endl;
 }
 
 uint32_t TestProto::read(xy::IProtocol* iprot){
@@ -114,5 +131,25 @@ void test_server_transport(){
     xy::TServerSocket ts(8889);
     ts.listen();
 }
+
+bool TestProcessor::process_testInt(int32_t seqid, xy::IProtocol* in, xy::IProtocol* out, void* callContext){
+    return 0;
+}
+
+bool TestProcessor::process_testStr(int32_t seqid, xy::IProtocol* in, xy::IProtocol* out, void* callContext){
+    return 0;
+}
+
+bool TestProcessor::dispatchCall(xy::IProtocol* iprot, xy::IProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext){
+    auto it = processMap_.find(fname);
+    if(it == processMap_.end()){
+
+        return true;
+    }
+
+    (this->*(it->second))(seqid, iprot, oprot, callContext);
+    return true;
+}
+
 
 } // test_svr
