@@ -6,6 +6,7 @@
 #include <memory>
 #include "XYTransport.h"
 #include "xy_example.h"
+#include "logging.h"
 #include "xy_servertransport.h"
 
 int main(int argc, char** argv){
@@ -13,9 +14,11 @@ int main(int argc, char** argv){
 //    test::test_template_virtual();
 //    test::test_template_virtual2();
 //    test::test_local_transport1();
-    test::test_exception_proto();
+//    test::test_exception_proto();
 
 //    test_svr::test_server_transport();
+
+    test_thread::test_thread();
 
     std::cout << "example end" << std::endl;
     return 0;
@@ -132,7 +135,22 @@ void test_server_transport(){
     ts.listen();
 }
 
+
+uint32_t TestInt_args::read(xy::IProtocol* iprot){
+
+}
+
+uint32_t TestInt_args::write(xy::IProtocol* oprot)const{
+
+}
+
 bool TestProcessor::process_testInt(int32_t seqid, xy::IProtocol* in, xy::IProtocol* out, void* callContext){
+    try{
+
+    }catch(const std::exception& ex){
+
+    }
+
     return 0;
 }
 
@@ -153,3 +171,123 @@ bool TestProcessor::dispatchCall(xy::IProtocol* iprot, xy::IProtocol* oprot, con
 
 
 } // test_svr
+
+namespace test_thread{
+using xy::Logger;
+
+class Run1: public Runnable{
+public:
+    virtual void run(){
+        info("run1 starting...");
+//        std::cout << "run1 starting..." << std::endl;
+        std::chrono::seconds sec(1);
+        std::this_thread::sleep_for(sec);
+        info("run1 end");
+//        std::cout << "run1 end" << std::endl;
+    }
+};
+
+class Run2: public Runnable{
+public:
+    virtual void run(){
+        info("run2 starting...");
+        //        std::cout << "run1 starting..." << std::endl;
+        std::chrono::seconds sec(2);
+        std::this_thread::sleep_for(sec);
+        info("run2 end");
+    }
+};
+
+void test_thread(){
+    StdThreadFactory factory(false);
+    auto th1 = factory.newThread(std::shared_ptr<Run1>(new Run1));
+    auto th2 = factory.newThread(std::shared_ptr<Run2>(new Run2));
+
+    th1->start();
+    th2->start();
+
+    th1->join();
+    th2->join();
+}
+
+void StdThread::threadMain(std::shared_ptr<StdThread> thread){
+    thread->setState(started);
+    thread->runnable()->run();
+
+    if (thread->getState() != stopping && thread->getState() != stopped) {
+        thread->setState(stopping);
+    }
+}
+
+StdThread::~StdThread(){
+    if (!detached_ && thread_->joinable()) {
+        try {
+            join();
+        } catch (...) {
+            // We're really hosed.
+        }
+    }
+}
+
+
+StdThread::STATE StdThread::getState() const{
+//    Synchronized sync(monitor_);
+    return state_;
+}
+
+
+void StdThread::setState(StdThread::STATE newState){
+//    Synchronized sync(monitor_);
+    state_ = newState;
+
+    // unblock start() with the knowledge that the thread has actually
+    // started running, which avoids a race in detached threads.
+//    if (newState == started) {
+//        monitor_.notify();
+//    }
+}
+
+
+void StdThread::start(){
+    if (getState() != uninitialized) {
+        return;
+    }
+
+    std::shared_ptr<StdThread> selfRef = shared_from_this();
+    setState(starting);
+
+//    Synchronized sync(monitor_);
+    thread_ = std::unique_ptr<std::thread>(new std::thread(threadMain, selfRef));
+
+    if (detached_)
+        thread_->detach();
+
+    // Wait for the thread to start and get far enough to grab everything
+    // that it needs from the calling context, thus absolving the caller
+    // from being required to hold on to runnable indefinitely.
+//    monitor_.wait();
+}
+
+
+void StdThread::join(){
+    if (!detached_ && state_ != uninitialized) {
+        thread_->join();
+    }
+}
+
+StdThreadFactory::StdThreadFactory(bool detached):ThreadFactory(detached){
+}
+
+std::shared_ptr<Thread> StdThreadFactory::newThread(std::shared_ptr<Runnable> runnable) const{
+    std::shared_ptr<StdThread> result = std::shared_ptr<StdThread>(new StdThread(isDetached(), runnable));
+    runnable->thread(result);
+    return result;
+}
+
+
+Thread::id_t StdThreadFactory::getCurrentThreadId() const{
+    return std::this_thread::get_id();
+}
+
+
+} // test_thread

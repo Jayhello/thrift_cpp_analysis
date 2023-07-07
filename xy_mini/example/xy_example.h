@@ -6,6 +6,7 @@
 #include <iostream>
 #include <functional>
 #include <map>
+#include <thread>
 #include "XYProtocol.h"
 #include "xy_processor.h"
 
@@ -101,6 +102,32 @@ public:
     std::string str;
 };
 
+class TestInt_args{
+public:
+    virtual uint32_t read(xy::IProtocol* iprot);
+    virtual uint32_t write(xy::IProtocol* oprot)const;
+
+    int a;
+};
+
+class TestInt_return{
+public:
+
+    int success;
+};
+
+class TestStr_args{
+public:
+
+    std::string str;
+};
+
+class TestStr_return{
+public:
+
+    int success;
+};
+
 class TestIf{
 public:
     virtual int testInt(int) = 0;
@@ -137,3 +164,110 @@ protected:
 
 } // test_svr
 
+
+// 线程相关的测试
+namespace test_thread{
+
+void test_thread();
+
+class Thread;
+
+class Runnable {
+public:
+    virtual ~Runnable(){};
+    virtual void run() = 0;
+
+    virtual std::shared_ptr<Thread> thread() { return thread_.lock(); }
+    virtual void thread(std::shared_ptr<Thread> value) { thread_ = value; }
+
+private:
+    std::weak_ptr<Thread> thread_;
+};
+
+class Thread {
+public:
+    typedef std::thread::id id_t;
+    static inline bool is_current(id_t t) { return t == std::this_thread::get_id(); }
+    static inline id_t get_current() { return std::this_thread::get_id(); }
+
+    virtual ~Thread(){};
+
+    virtual void start() = 0;
+
+    virtual void join() = 0;
+
+    // Gets the thread's platform-specific ID
+    virtual id_t getId() = 0;
+
+    // Gets the runnable object this thread is hosting
+    virtual std::shared_ptr<Runnable> runnable() const { return _runnable; }
+
+protected:
+    virtual void runnable(std::shared_ptr<Runnable> value) { _runnable = value; }
+
+private:
+    std::shared_ptr<Runnable> _runnable;
+};
+
+class StdThread : public Thread, public std::enable_shared_from_this<StdThread> {
+public:
+    enum STATE { uninitialized, starting, started, stopping, stopped };
+
+    static void threadMain(std::shared_ptr<StdThread> thread);
+
+    StdThread(bool detached, std::shared_ptr<Runnable> runnable):state_(uninitialized),detached_(detached){
+        this->Thread::runnable(runnable);
+    }
+
+    ~StdThread();
+
+    STATE getState() const;
+
+    void setState(STATE newState);
+
+    void start();
+
+    void join();
+
+    Thread::id_t getId() { return thread_.get() ? thread_->get_id() : std::thread::id(); }
+
+    std::shared_ptr<Runnable> runnable() const { return Thread::runnable(); }
+
+    void runnable(std::shared_ptr<Runnable> value) { Thread::runnable(value); }
+
+private:
+    std::unique_ptr<std::thread> thread_;
+    //    Monitor monitor_;
+    STATE state_;
+    bool detached_;
+};
+
+
+// Factory to create platform-specific thread object and bind them to Runnable object for execution
+class ThreadFactory {
+protected:
+    ThreadFactory(bool detached) : detached_(detached) { }
+public:
+    virtual ~ThreadFactory() {}
+
+    bool isDetached() const { return detached_; }
+    void setDetached(bool detached) { detached_ = detached; }
+
+    virtual std::shared_ptr<Thread> newThread(std::shared_ptr<Runnable> runnable) const = 0;
+    virtual Thread::id_t getCurrentThreadId() const = 0;
+    static const Thread::id_t unknown_thread_id;
+private:
+    bool detached_;
+};
+
+class StdThreadFactory : public ThreadFactory {
+public:
+    StdThreadFactory(bool detached = true);
+
+    std::shared_ptr<Thread> newThread(std::shared_ptr<Runnable> runnable) const;
+
+    Thread::id_t getCurrentThreadId() const;
+};
+
+
+} // test_thread
